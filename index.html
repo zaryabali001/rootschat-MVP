@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RootsAI - AI PDF Chatbot Builder</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="page active">
+        <header class="header">
+            <div class="logo">RootsAI</div>
+        </header>
+
+        <main class="hero">
+            <h1 class="title animate-fade-in">RootsChat</h1>
+            <p class="description animate-fade-in-delay">
+                Upload any PDF and instantly create a smart chatbot powered by RootsAI.<br>
+                Embed it on your website, help customers, answer FAQs — no coding required.
+            </p>
+            <button id="get-started-btn" class="cta-button animate-scale-in">
+                Get Started Free
+            </button>
+        </main>
+
+        <div class="background-animation">
+            <div class="floating-shape shape1"></div>
+            <div class="floating-shape shape2"></div>
+            <div class="floating-shape shape3"></div>
+            <div class="floating-shape shape4"></div>
+        </div>
+    </div>
+
+    <!-- Chatbot Builder Page (Original Functionality) -->
+    <div id="builder-page" class="page">
+        <header class="header">
+            <div class="logo">RootsAI</div>
+            <button id="back-to-landing" class="back-btn">← Back</button>
+        </header>
+
+        <div class="container builder-container">
+            <h1>Create Your AI Chatbot</h1>
+            <p>Upload a PDF and generate an embeddable chatbot in seconds.</p>
+
+            <div id="upload-section" class="card animate-slide-up">
+                <input type="file" id="pdf-upload" accept=".pdf">
+                <button id="create-chatbot" class="primary-btn">Create Chatbot</button>
+            </div>
+
+            <div id="embed-section" class="card hidden animate-slide-up">
+                <h2>✅ Your Chatbot is Ready!</h2>
+                <p>Copy this code and paste it into your website:</p>
+                <pre id="embed-code"></pre>
+                <div class="button-group">
+                    <button id="test-chatbot" class="secondary-btn">Test Chatbot</button>
+                    <button id="new-chatbot" class="secondary-btn">Create Another</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

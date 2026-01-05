@@ -1,0 +1,7 @@
+fastapi==0.110.2
+uvicorn==0.29.0
+PyPDF2==3.0.1
+nltk==3.8.1
+python-multipart==0.0.9
+openai==1.51.0  # Latest as of Jan 2026
+python-dotenv==1.0.1  # For secure API key storage
