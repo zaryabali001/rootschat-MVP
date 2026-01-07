@@ -16,7 +16,7 @@ document.getElementById('back-to-landing')?.addEventListener('click', () => {
     }
 });
 
-// === ORIGINAL CHATBOT CREATION LOGIC (UNCHANGED) ===
+// === ORIGINAL CHATBOT CREATION LOGIC (UPDATED FOR NEW CHAT INTERFACE) ===
 if (document.getElementById('create-chatbot')) {
     document.getElementById('create-chatbot').addEventListener('click', async () => {
         const fileInput = document.getElementById('pdf-upload');
@@ -54,10 +54,10 @@ if (document.getElementById('create-chatbot')) {
         }
     });
 
-    // Test the created chatbot
+    // Test the created chatbot in a new window
     document.getElementById('test-chatbot')?.addEventListener('click', () => {
         if (window.currentChatbotId) {
-            window.open(`/chat/${window.currentChatbotId}`, '_blank');
+            window.open(`/chat/${window.currentChatbotId}`, '_blank', 'width=500,height=700');
         }
     });
 
@@ -67,53 +67,4 @@ if (document.getElementById('create-chatbot')) {
         document.getElementById('upload-section').classList.remove('hidden');
         document.getElementById('pdf-upload').value = '';
     });
-}
-
-// === EMBEDDED CHAT WIDGET LOGIC (UNCHANGED) ===
-if (document.getElementById('send-question') && window.chatbotId) {
-    const chatWindow = document.getElementById('chat-window');
-    const input = document.getElementById('question-input');
-
-    function addBubble(text, type) {
-        const bubble = document.createElement('div');
-        bubble.className = `chat-bubble ${type}-bubble`;
-        bubble.textContent = text;
-        chatWindow.appendChild(bubble);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    // Initial greeting (optional - already in HTML, but safe)
-    // addBubble("Hello! I'm powered by Claude AI. Ask me anything about the PDF! 📄", 'bot');
-
-    document.getElementById('send-question').addEventListener('click', sendQuestion);
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            sendQuestion();
-        }
-    });
-
-    async function sendQuestion() {
-        const question = input.value.trim();
-        if (!question) return;
-
-        addBubble(question, 'user');
-        input.value = '';
-
-        const formData = new URLSearchParams();
-        formData.append('chatbot_id', window.chatbotId);
-        formData.append('question', question);
-
-        try {
-            const res = await fetch('/ask_question', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData
-            });
-
-            const data = await res.json();
-            addBubble(data.answer, 'bot');
-        } catch (err) {
-            addBubble('Error: Could not connect to the server.', 'bot');
-        }
-    }
 }

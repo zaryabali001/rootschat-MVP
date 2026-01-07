@@ -6,7 +6,12 @@ from PyPDF2 import PdfReader
 from anthropic import Anthropic
 import uuid
 import re
+import os
 from typing import Dict
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = FastAPI()
 
@@ -18,7 +23,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-CLAUDE_API_KEY = "YOUR_CLAUDE_API_KEY_HERE"
+CLAUDE_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+if not CLAUDE_API_KEY:
+    print("⚠️  WARNING: ANTHROPIC_API_KEY not set. Please add it to .env file or environment variables.")
 
 client = Anthropic(api_key=CLAUDE_API_KEY)
 
@@ -108,7 +115,10 @@ async def ask_question(chatbot_id: str = Form(...), question: str = Form(...)):
 @app.get("/chat/{chatbot_id}", response_class=HTMLResponse)
 async def embedded_chat(chatbot_id: str):
     if chatbot_id not in chatbots:
-        return HTMLResponse(content="<h3 style='text-align:center;padding:80px;color:#999;'>Chatbot not found or expired.</h3>", status_code=404)
+        return HTMLResponse(
+            content="<h3 style='text-align:center;padding:80px;color:#999;'>Chatbot not found or expired.</h3>",
+            status_code=404
+        )
 
     return f"""
 <!DOCTYPE html>
@@ -116,25 +126,37 @@ async def embedded_chat(chatbot_id: str):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RootsChat MVP - Powered by RootsAI</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>RootsChat - AI PDF Chatbot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/chatbot.css">
 </head>
 <body>
-    <div id="chat-section">
-        <div id="chat-window">
-            <div class="chat-bubble bot-bubble">
-                Hello! I'm RootsChat. Upload a PDF and ask me anything about its content! 📄✨
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-content">
+                <h1>RootsChat</h1>
+                <p><span class="status-indicator"></span> Online</p>
             </div>
         </div>
+        <div id="chat-window" class="chat-window"></div>
         <div class="input-area">
-            <input type="text" id="question-input" placeholder="Ask about the PDF...">
-            <button id="send-question">Send</button>
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="question-input" 
+                    placeholder="Ask me anything about the PDF..." 
+                    autocomplete="off"
+                >
+            </div>
+            <button id="send-question" title="Send message">
+                ➤
+            </button>
         </div>
     </div>
     <script>
         window.chatbotId = "{chatbot_id}";
     </script>
-    <script src="/static/script.js"></script>
+    <script src="/static/chatbot.js"></script>
 </body>
 </html>
 """
